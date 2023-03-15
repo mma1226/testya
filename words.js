@@ -1,51 +1,49 @@
-window.onload = function() {
+const splitWords = () => {
+  const textNode = document.querySelector(".text");
+  const text = textNode.textContent;
+  const newDomElements = text.split(" ").map((text) => {
+    return `<span class="word">${text}</span>`;
+  });
+  textNode.innerHTML = newDomElements.join("");
+};
 
+const renderCanvas = () => {
+  const Engine = Matter.Engine;
+  const Render = Matter.Render;
+  const World = Matter.World;
+  const Bodies = Matter.Bodies;
+  const Events = Matter.Events;
 
-  const splitWords = () => {
-    const textNode = document.querySelector(".text");
-    const text = textNode.textContent;
-    const newDomElements = text.split(" ").map((text) => {
-      return `<span class="word">${text}</span>`;
-    });
-    textNode.innerHTML = newDomElements.join("");
-  };
+  // create a Matter.js engine
+  const engine = Engine.create();
 
-  const renderCanvas = () => {
-    const Engine = Matter.Engine;
-    const Render = Matter.Render;
-    const World = Matter.World;
-    const Bodies = Matter.Bodies;
+  // create a renderer
+  const render = Render.create({
+    element: document.body,
+    engine: engine,
+    options: {
+      width: window.innerWidth,
+      height: window.innerHeight,
+      wireframes: false,
+      background: 'transparent'
+    }
+  });
 
-    // create a Matter.js engine
-    const engine = Engine.create();
+  // create a box that will act as a boundary for the falling words
+  const boundary = Bodies.rectangle(
+    window.innerWidth / 2,
+    window.innerHeight - 20,
+    window.innerWidth,
+    40,
+    { isStatic: true }
+  );
 
-    // create a renderer
-    const render = Render.create({
-      element: document.body,
-      engine: engine,
-      options: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        wireframes: false,
-        background: 'transparent'
-      }
-    });
-
-    // create a box that will act as a boundary for the falling words
-    const boundary = Bodies.rectangle(
-      window.innerWidth / 2,
-      window.innerHeight - 20,
-      window.innerWidth,
-      40,
-      { isStatic: true }
-    );
-
-    // create the falling words
-    const words = document.querySelectorAll(".word");
-    const boxes = [];
-    words.forEach((word) => {
-      const box = Bodies.rectangle(
-        Math.random() * window.innerWidth,
+  // create the falling words
+  const words = document.querySelectorAll(".word");
+  const boxes = [];
+  words.forEach((word) => {
+    const box = Bodies.rectangle(
+      Math.random() * window.innerWidth,
         Math.random() * -1000,
         word.clientWidth,
         word.clientHeight
@@ -73,5 +71,5 @@ window.onload = function() {
   window.onload = splitWords;
 
   // call the renderCanvas function after a short timeout to make sure all the DOM elements have been rendered
-  setTimeout(renderCanvas, 100);};
+  setTimeout(renderCanvas, 100);
 
